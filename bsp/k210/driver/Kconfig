@@ -42,13 +42,6 @@ if USING_EPAPER
         config EPAPER_4IN2_C
             bool "4.2英寸(黑白黄)"
 
-        config EPAPER_4N9
-            bool "4.9英寸(黑白)"
-        config EPAAPER_4IN9_B
-            bool "4.9英寸(黑白红)"
-        config EPAPER_4IN9_C
-            bool "4.9英寸(黑白黄)"
-
         config EPAPER_5IN83
             bool "5.83英寸(黑白)"
         config EPAAPER_5IN83_B
@@ -58,10 +51,10 @@ if USING_EPAPER
 
         config EPAPER_6IN0
             bool "6英寸(黑白)"
-        config EPAAPER_6IN0_B
-            bool "6英寸(黑白红)"
-        config EPAPER_6IN0_C
-            bool "6英寸(黑白黄)"
+        config EPAAPER_6IN0_HD
+            bool "6英寸(高清)"
+        config EPAPER_6IN0_HD_TOUCH
+            bool "6英寸(高清+触摸)"
         
         config EPAPER_7IN5
             bool "7.5英寸(黑白)"
@@ -116,14 +109,6 @@ if USING_EPAPER
     menuconfig EPAPER_BUSY_GPIO
         int "墨水屏BUSY GPIO"
         default 3
-
-    menuconfig EPAPER_X_MAX
-        int "墨水屏x轴分辨率"
-        default 200
-    menuconfig EPAPER_Y_MAX
-        int "墨水屏y轴分辨率"
-        default 200
-    
 
 endif
 endmenu
