@@ -31,6 +31,7 @@ enum HS_GPIO_CONFIG
 #ifdef USING_EPAPER
     APP_EPAPER_DC_PIN,
     APP_EPAPER_RST_PIN,
+    APP_EPAPER_BUSY_PIN,
 #endif
     GPIO_ALLOC_START /* index of gpio driver start */
 };
