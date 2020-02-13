@@ -168,6 +168,54 @@ static rt_size_t drv_epaper_write(rt_device_t dev, rt_off_t pos, const void *buf
 
     return 0;
 }
+
+static rt_err_t drv_epaper_control(rt_device_t dev, int cmd, void *args)
+{
+    rt_err_t ret = RT_EOK;
+    epaper_device_t epaper = (epaper_device_t)dev;
+    rt_base_t level;
+    struct rt_device_rect_info* rect_info = (struct rt_device_rect_info*)args;
+
+    RT_ASSERT(dev != RT_NULL);
+
+    switch (cmd)
+    {
+    case RTGRAPHIC_CTRL_RECT_UPDATE:
+        if(!rect_info)
+        {
+            LOG_E("RTGRAPHIC_CTRL_RECT_UPDATE error args");
+            return -RT_ERROR;
+        }
+        break;
+
+    case RTGRAPHIC_CTRL_POWERON:
+        /* Todo: power on */
+        ret = -RT_ENOSYS;
+        break;
+
+    case RTGRAPHIC_CTRL_POWEROFF:
+        /* Todo: power off */
+        ret = -RT_ENOSYS;
+        break;
+
+    case RTGRAPHIC_CTRL_GET_INFO:
+        *(struct rt_device_graphic_info *)args = epaper->epaper_info;
+        break;
+
+    case RTGRAPHIC_CTRL_SET_MODE:
+        ret = -RT_ENOSYS;
+        break;
+    case RTGRAPHIC_CTRL_GET_EXT:
+        ret = -RT_ENOSYS;
+        break;
+    default:
+        LOG_E("drv_lcd_control cmd: %d", cmd);
+        break;
+    }
+
+    return ret;
+}
+
 #ifdef RT_USING_DEVICE_OPS
 const static struct rt_device_ops drv_epaper_ops =
 {
