@@ -13,6 +13,8 @@
 
 int main(void)
 {
+    rt_system_scheduler_init();
+    rt_system_scheduler_start();
     rt_kprintf("Hello, world\n");
 
     return 0;

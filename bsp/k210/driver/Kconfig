@@ -152,11 +152,14 @@ if BSP_USING_LCD
         int "CS pin number of 8080 interface"
         default 6
     config BSP_LCD_WR_PIN
-        int "DC pin number of 8080 interface"
+        int "WR pin number of 8080 interface"
         default 7
     config BSP_LCD_DC_PIN
         int "DC pin number of 8080 interface"
         default 8
+    config BSP_LCD_DC_GPIO
+        int "DC gpio number of 8080 interface"
+        default 0
     config BSP_LCD_X_MAX
         int "LCD Height"
         default 240

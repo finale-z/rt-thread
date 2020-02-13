@@ -28,6 +28,10 @@ enum HS_GPIO_CONFIG
 #ifdef BSP_SPI1_USING_SS3
     SPI1_CS3_PIN,
 #endif
+#ifdef USING_EPAPER
+    APP_EPAPER_DC_PIN,
+    APP_EPAPER_RST_PIN,
+#endif
     GPIO_ALLOC_START /* index of gpio driver start */
 };
 

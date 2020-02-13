@@ -27,7 +27,7 @@ static struct io_config
 #ifdef BSP_USING_LCD
     IOCONFIG(BSP_LCD_CS_PIN, FUNC_SPI0_SS0),                 /* LCD CS PIN */
     IOCONFIG(BSP_LCD_WR_PIN, FUNC_SPI0_SCLK),                /* LCD WR PIN */
-    IOCONFIG(BSP_LCD_DC_PIN, HS_GPIO(LCD_DC_PIN)),     /* LCD DC PIN */
+    IOCONFIG(BSP_LCD_DC_PIN, HS_GPIO(BSP_LCD_DC_GPIO)),     /* LCD DC PIN */
 #endif
 
 #ifdef BSP_USING_CAMERA
@@ -73,6 +73,11 @@ static struct io_config
 #endif
 #ifdef BSP_SPI1_USING_SS3
     IOCONFIG(BSP_SPI1_SS3_PIN, HS_GPIO(SPI1_CS3_PIN)),
+#endif
+
+#ifdef USING_EPAPER
+    IOCONFIG(EPAPER_DC_PIN, HS_GPIO(EPAPER_DC_GPIO)),
+    IOCONFIG(EPAPER_RST_PIN, HS_GPIO(EPAPER_RST_GPIO)),
 #endif
 #endif
 

@@ -25,6 +25,18 @@ if USING_EPAPER
         int "墨水屏数据/命令控制引脚"
     default 11
 
+    menuconfig EPAPER_DC_GPIO
+        int "墨水屏数据/命令控制GPIO"
+    default 1
+
+    menuconfig EPAPER_RST_PIN
+        int "墨水屏复位引脚"
+    default 12
+
+    menuconfig EPAPER_RST_GPIO
+        int "墨水屏复位GPIO"
+    default 2
+
     menuconfig EPAPER_X_MAX
         int "墨水屏x轴分辨率"
         default 200
