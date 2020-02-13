@@ -1,3 +1,133 @@
+menu "User Application"
+
+menuconfig USING_EPAPER
+    bool    "Using Epaper"
+    default n
+
+if USING_EPAPER
+    choice 
+        prompt "墨水屏型号"
+        config EPAPER_1IN54
+            bool "1.54英寸(黑白)"
+        config EPAAPER_1IN54_B
+            bool "1.54英寸(黑白红)"
+        config EPAPER_1IN54_C
+            bool "1.54英寸(黑白黄)"
+
+        config EPAPER_2IN13
+            bool "2.13英寸(黑白)"
+        config EPAAPER_2IN13_B
+            bool "2.13英寸(黑白红)"
+        config EPAPER_2IN13_C
+            bool "2.13英寸(黑白黄)"
+
+        config EPAPER_2IN7
+            bool "2.7英寸(黑白)"
+        config EPAAPER_2IN7_B
+            bool "2.7英寸(黑白红)"
+        config EPAPER_2IN7_C
+            bool "2.7英寸(黑白黄)"
+
+        config EPAPER_2IN9
+            bool "2.9英寸(黑白)"
+        config EPAAPER_2IN9_B
+            bool "2.94英寸(黑白红)"
+        config EPAPER_2IN9_C
+            bool "2.9英寸(黑白黄)"
+        
+        config EPAPER_4IN2
+            bool "4.2英寸(黑白)"
+        config EPAAPER_4IN2_B
+            bool "4.2英寸(黑白红)"
+        config EPAPER_4IN2_C
+            bool "4.2英寸(黑白黄)"
+
+        config EPAPER_4N9
+            bool "4.9英寸(黑白)"
+        config EPAAPER_4IN9_B
+            bool "4.9英寸(黑白红)"
+        config EPAPER_4IN9_C
+            bool "4.9英寸(黑白黄)"
+
+        config EPAPER_5IN83
+            bool "5.83英寸(黑白)"
+        config EPAAPER_5IN83_B
+            bool "5.83英寸(黑白红)"
+        config EPAPER_5IN83_C
+            bool "5.83英寸(黑白黄)"
+
+        config EPAPER_6IN0
+            bool "6英寸(黑白)"
+        config EPAAPER_6IN0_B
+            bool "6英寸(黑白红)"
+        config EPAPER_6IN0_C
+            bool "6英寸(黑白黄)"
+        
+        config EPAPER_7IN5
+            bool "7.5英寸(黑白)"
+        config EPAAPER_7IN5_B
+            bool "7.5英寸(黑白红)"
+        config EPAPER_7IN5_C
+            bool "7.5英寸(黑白黄)"
+
+        config EPAPER_7IN8
+            bool "7.8英寸"
+        config EPAAPER_9IN7
+            bool "9.7英寸"
+        config EPAPER_10IN3_D
+            bool "10.3英寸"
+
+        default EPAPER_1IN54
+    endchoice
+
+    choice 
+        prompt "墨水屏在SPI1上的片选"
+        config EPAPER_USE_SS0
+            bool "片选0(SS0)"
+            select BSP_SPI1_USING_SS0
+        config EPAPER_USE_SS1
+            bool "片选1(SS1)"
+            select BSP_SPI1_USING_SS1
+        config EPAPER_USE_SS2
+            bool"片选2(SS2)"
+            select BSP_SPI1_USING_SS2
+        config EPAPER_USE_SS3
+            bool"片选3(SS3)"
+            select BSP_SPI1_USING_SS3
+    endchoice
+
+    menuconfig EPAPER_DC_PIN
+        int "墨水屏数据/命令控制引脚"
+    default 11
+    menuconfig EPAPER_DC_GPIO
+        int "墨水屏数据/命令控制GPIO"
+    default 1
+
+    menuconfig EPAPER_RST_PIN
+        int "墨水屏复位引脚"
+    default 12
+    menuconfig EPAPER_RST_GPIO
+        int "墨水屏复位GPIO"
+    default 2
+
+    menuconfig EPAPER_BUSY_PIN
+        int "墨水屏BUSY引脚“
+        default 13
+    menuconfig EPAPER_BUSY_GPIO
+        int "墨水屏BUSY GPIO"
+        default 3
+
+    menuconfig EPAPER_X_MAX
+        int "墨水屏x轴分辨率"
+        default 200
+    menuconfig EPAPER_Y_MAX
+        int "墨水屏y轴分辨率"
+        default 200
+    
+
+endif
+endmenu
+
 config BSP_USING_UART_HS
     bool "Enable High Speed UART"
     default y

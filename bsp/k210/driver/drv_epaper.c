@@ -17,6 +17,8 @@ typedef struct epaper_device
     int rst_io;
     int busy_io;
     int dma_channel;
+    rt_uint8_t width;
+    rt_uint8_t height;
 } * epaper_device_t;
 
 static void drv_epaper_cmd(epaper_device_t epaper, rt_uint8_t cmd)
@@ -74,7 +76,7 @@ static void drv_epaper_read_busy(epaper_device_t epaper_io)
     }
 }
 
-static void epaper_display_turn_on(epaper_device_t epaper_dev)
+static void drv_epaper_display_turn_on(epaper_device_t epaper_dev)
 {
     drv_epaper_cmd(epaper_dev,0x22);
     drv_epaper_data_byte(epaper_dev,0xF7);
@@ -82,7 +84,7 @@ static void epaper_display_turn_on(epaper_device_t epaper_dev)
     drv_epaper_read_busy(epaper_dev);   
 }
 
-static void epaper_display_part_turn_on(epaper_device_t epaper_dev)
+static void drv_epaper_display_part_turn_on(epaper_device_t epaper_dev)
 {
     drv_epaper_cmd(epaper_dev,0x22);
     drv_epaper_data_byte(epaper_dev,0xFF);
@@ -135,6 +137,37 @@ static rt_err_t drv_epaper_init(rt_device_t dev)
     drv_epaper_data_byte(epaper_dev,0xC7,1);
     drv_epaper_data_byte(epaper_dev,0x00,1);
     drv_epaper_read_busy(epaper_dev);
+}
+
+static rt_err_t drv_epaper_clear(epaper_device_t epaper_dev)
+{
+    rt_uint8_t *buff = (rt_uint8_t *)rt_malloc((epaper_dev->width) * (epaper_dev->height) * sizeof(rt_uint8_t));
+    if(buff == RT_NULL)
+    {
+        LOG_E("Failed to request cache");
+        return RT_ERROR;
+    }
+    rt_memset(buff,0xFF,(epaper_dev->width) * (epaper_dev->height) * sizeof(rt_uint8_t));
+    drv_epaper_cmd(epaper_dev,0x24);
+    drv_epaper_data_byte(epaper_dev,buff,width*height);
+    drv_epaper_display_turn_on(epaper_dev);
+}
+
+static void drv_epaper_display_image(epaper_device_t epaper_dev,rt_uint8_t *image)
+{
+    drv_epaper_cmd(epaper_dev,0x24);
+    drv_epaper_data_byte(epaper_dev,image,(epaper_dev->width)*(epaper_dev->height));
+    drv_epaper_display_turn_on(epaper_dev);
+}
+
+static void drv_epaper_part_base_display_image(epaper_device_t epaper_dev,rt_uint8_t * image)
+{
+    drv_epaper_cmd(epaper_dev,0x24);
+    drv_epaper_data_byte(epaper_dev,image,(epaper_dev->width)*(epaper_dev->height));
+
+    drv_epaper_cmd(epaper_dev,0x26);
+    drv_epaper_data_byte(epaper_dev,image,(epaper_dev->width)*(epaper_dev->height));
+
 }
 
 static rt_err_t drv_epaper_open(rt_device_t dev, rt_uint16_t oflag)
@@ -257,7 +290,8 @@ int rt_hw_epaper_init(void)
     epaper_dev->parent.type        = RT_Device_Class_Graphic;
     epaper_dev->parent.rx_indicate = RT_NULL;
     epaper_dev->parent.tx_complete = RT_NULL;
-
+    epaper_dev -> width = (EPAPER_X_MAX % 8 ==0)?(EPAPER_X_MAX / 8):(EPAPER_X_MAX / 8 +1);
+    epaper_dev -> height = EPAPER_Y_MAX;
 #ifdef RT_USING_DEVICE_OPS
     epaper_dev->parent.ops        = &drv_epaper_ops;
 #else
