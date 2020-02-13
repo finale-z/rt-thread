@@ -2,7 +2,7 @@
 #include <rtthread.h>
 
 #ifdef USING_EPAPER
-#include "epaper.h"
+#include "drv_epaper.h"
 #include <drv_io_config.h>
 #include <spi.h>
 #include <gpiohs.h>
