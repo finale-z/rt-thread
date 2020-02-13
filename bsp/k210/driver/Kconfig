@@ -1,4 +1,4 @@
-menu "User Application"
+menu "WaveShare"
 
 menuconfig USING_EPAPER
     bool    "Using Epaper"

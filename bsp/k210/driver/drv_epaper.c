@@ -160,14 +160,21 @@ static void drv_epaper_display_image(epaper_device_t epaper_dev,rt_uint8_t *imag
     drv_epaper_display_turn_on(epaper_dev);
 }
 
-static void drv_epaper_part_base_display_image(epaper_device_t epaper_dev,rt_uint8_t * image)
+static void drv_epaper_display_part_base_image(epaper_device_t epaper_dev,rt_uint8_t * image)
 {
     drv_epaper_cmd(epaper_dev,0x24);
     drv_epaper_data_byte(epaper_dev,image,(epaper_dev->width)*(epaper_dev->height));
 
     drv_epaper_cmd(epaper_dev,0x26);
     drv_epaper_data_byte(epaper_dev,image,(epaper_dev->width)*(epaper_dev->height));
+    drv_epaper_display_part_turn_on(epaper_dev);
+}
 
+static void drv_epaper_display_part_image(epaper_device_t epaper_dev,rt_uint8_t *image)
+{
+    drv_epaper_cmd(epaper_dev,0x24);
+    drv_epaper_data_byte(epaper_dev,image,(epaper_dev->width)*(epaper_dev->height));
+    drv_epaper_display_part_turn_on(epaper_dev);
 }
 
 static rt_err_t drv_epaper_open(rt_device_t dev, rt_uint16_t oflag)
