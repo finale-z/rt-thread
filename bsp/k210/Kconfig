@@ -26,7 +26,6 @@ config BOARD_K210_EVB
     select RT_USING_USER_MAIN
     default y
     
-source "applications/Kconfig"
 source "driver/Kconfig"
 
 config __STACKSIZE__

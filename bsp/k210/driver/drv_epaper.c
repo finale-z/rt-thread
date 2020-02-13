@@ -149,7 +149,7 @@ static rt_err_t drv_epaper_clear(epaper_device_t epaper_dev)
     }
     rt_memset(buff,0xFF,(epaper_dev->width) * (epaper_dev->height) * sizeof(rt_uint8_t));
     drv_epaper_cmd(epaper_dev,0x24);
-    drv_epaper_data_byte(epaper_dev,buff,width*height);
+    drv_epaper_data_byte(epaper_dev,buff,(epaper_dev->width) * (epaper_dev->height));
     drv_epaper_display_turn_on(epaper_dev);
 }
 
