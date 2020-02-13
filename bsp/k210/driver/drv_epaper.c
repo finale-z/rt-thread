@@ -90,8 +90,11 @@ static void epaper_display_part_turn_on(epaper_device_t epaper_dev)
     drv_epaper_read_busy(epaper_dev);   
 }
 
-static drv_epaper_init(epaper_device_t epaper_dev)
+
+static rt_err_t drv_epaper_init(rt_device_t dev)
 {
+    rt_err_t ret = RT_EOK;
+    epaper_device_t epaper_dev = (epaper_device_t)dev;
     drv_epaper_reset(epaper_dev);
 
     drv_epaper_read_busy(epaper_dev);
