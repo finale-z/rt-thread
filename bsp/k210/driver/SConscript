@@ -36,9 +36,6 @@ if GetDepend('RT_USING_PWM'):
 if GetDepend('RT_USING_WDT'):
     src += ['drv_wdt.c']
 
-if GetDepend('USING_EPAPER'):
-    src +=['epaper/drv_epaper.c']
-
 group = DefineGroup('Drivers', src, depend = [''], CPPPATH = CPPPATH)
 
 objs = [group]

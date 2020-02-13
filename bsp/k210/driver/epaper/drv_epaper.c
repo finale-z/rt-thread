@@ -3,70 +3,12 @@
 
 #ifdef USING_EPAPER
 #include "drv_epaper.h"
-#include <drv_io_config.h>
+#include "epapercfg.h"
 #include <spi.h>
+#include <fpioa.h>
 #include <gpiohs.h>
 #include <rtdbg.h>
-
-#ifdef EPAPER_1IN54 || EPAPER_1IN54_B || EPAPER_1IN54_C
-#define EPAPER_X_MAX 200
-#define EPAPER_Y_MAX 200
-#endif
-
-#ifdef EPAPER_2IN13 || EPAPER_2IN13_B || EPAPER_2IN13_C
-#define EPAPER_X_MAX 212
-#define EPAPER_Y_MAX 104
-#endif
-
-#ifdef EPAPER_2IN7 || EPAPER_2IN7_B || EPAPER_2IN7_C
-#define EPAPER_X_MAX 264
-#define EPAPER_Y_MAX 176
-#endif
-
-#ifdef EPAPER_2IN9 || EPAPER_2IN9_B || EPAPER_2IN9_C
-#define EPAPER_X_MAX 296
-#define EPAPER_Y_MAX 128
-#endif
-
-#ifdef EPAPER_4IN2 || EPAPER_4IN2_B || EPAPER_4IN2_C
-#define EPAPER_X_MAX 400
-#define EPAPER_Y_MAX 300
-#endif
-
-#ifdef EPAPER_5IN83 || EPAPER_5IN83_B || EPAPER_5IN83_C
-#define EPAPER_X_MAX 600
-#define EPAPER_Y_MAX 480
-#endif
-
-#ifdef EPAPER_6IN0
-#define EPAPER_X_MAX 800
-#define EPAPER_Y_MAX 600
-#endif
-
-#ifdef EPAPER_6IN0_HD || EPAPER_6IN0_HD_TOUCH
-#define EPAPER_X_MAX 1448
-#define EPAPER_Y_MAX 1072
-#endif
-
-#ifdef EPAPER_7IN5 || EPAPER_7IN5_B || EPAPER_7IN5_C
-#define EPAPER_X_MAX 800
-#define EPAPER_Y_MAX 480
-#endif
-
-#ifdef EPAPER_7IN8
-#define EPAPER_X_MAX 1872
-#define EPAPER_Y_MAX 1404
-#endif
-
-#ifdef EPAPER_9IN7
-#define EPAPER_X_MAX 1200
-#define EPAPER_Y_MAX 825
-#endif
-
-#ifdef EPAPER_10IN3_D
-#define EPAPER_X_MAX 1872
-#define EPAPER_Y_MAX 1404
-#endif
+#include <drv_io_config.h>
 
 typedef struct epaper_device
 {
@@ -84,26 +26,26 @@ typedef struct epaper_device
 
 static void drv_epaper_cmd(epaper_device_t epaper, rt_uint8_t cmd)
 {
-    gpiohs_set_io(epaper->dc_io, GPIO_PV_LOW);
+    gpiohs_set_pin(epaper->dc_io, GPIO_PV_LOW);
     spi_init(epaper->spi_channel, SPI_WORK_MODE_0, SPI_FF_STANDARD, 8, 1);
     spi_send_data_normal_dma(epaper->dma_channel, epaper->spi_channel, epaper->cs, &cmd, 1, SPI_TRANS_CHAR);
 }
 
-static void drv_epaper_data_byte(epaper_device_t epaper, rt_uint8_t *data_buf, rt_uint32_t length)
+static void drv_epaper_data_byte(epaper_device_t epaper, rt_uint8_t *data_buf, rt_uint8_t length)
 {
     gpiohs_set_pin(epaper->dc_io, GPIO_PV_HIGH);
     spi_init(epaper->spi_channel, SPI_WORK_MODE_0, SPI_FF_STANDARD, 8, 1);
     spi_send_data_normal_dma(epaper->dma_channel, epaper->spi_channel, epaper->cs, data_buf, length, SPI_TRANS_CHAR);
 }
 
-static void drv_epaper_data_half_word(epaper_device_t epaper, rt_uint16_t *data_buf, rt_uint32_t length)
+static void drv_epaper_data_half_word(epaper_device_t epaper, rt_uint16_t *data_buf, rt_uint8_t length)
 {
     gpiohs_set_pin(epaper->dc_io, GPIO_PV_HIGH);
     spi_init(epaper->spi_channel, SPI_WORK_MODE_0, SPI_FF_STANDARD, 16, 1);
     spi_send_data_normal_dma(epaper->dma_channel, epaper->spi_channel, epaper->cs, data_buf, length, SPI_TRANS_SHORT);
 }
 
-static void drv_epaper_data_word(epaper_device_t epaper, rt_uint32_t *data_buf, rt_uint32_t length)
+static void drv_epaper_data_word(epaper_device_t epaper, rt_uint32_t *data_buf, rt_uint8_t length)
 {
     gpiohs_set_pin(epaper->dc_io, GPIO_PV_HIGH);
     spi_init(epaper->spi_channel, SPI_WORK_MODE_0, SPI_FF_STANDARD, 32, 1);
@@ -131,7 +73,7 @@ static void drv_epaper_reset(epaper_device_t epaper_io)
 
 static void drv_epaper_read_busy(epaper_device_t epaper_io)
 {
-    while(drv_pin_read(epaper_io->parent,epaper_io->busy_io))
+    while(gpiohs_get_pin(epaper_io->busy_io))
     {
         rt_thread_mdelay(100);
     }
@@ -283,17 +225,12 @@ static rt_err_t drv_epaper_control(rt_device_t dev, int cmd, void *args)
 
     switch (cmd)
     {
-    case RTGRAPHIC_CTRL_RECT_UPDATE:
-        if(!rect_info)
-        {
-            LOG_E("RTGRAPHIC_CTRL_RECT_UPDATE error args");
-            return -RT_ERROR;
-        }
+    case EPAPER_CLEAR:
+        drv_epaper_clear(epaper);
         break;
 
-    case RTGRAPHIC_CTRL_POWERON:
-        /* Todo: power on */
-        ret = -RT_ENOSYS;
+    case EPAPER_DISPLAY_IMAGE:
+        drv_epaper_display_image(epaper,(rt_uint8_t *)args);
         break;
 
     case RTGRAPHIC_CTRL_POWEROFF:

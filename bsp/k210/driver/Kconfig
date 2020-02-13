@@ -9,63 +9,63 @@ if USING_EPAPER
         prompt "墨水屏型号"
         config EPAPER_1IN54
             bool "1.54英寸(黑白)"
-        config EPAAPER_1IN54_B
+        config EPAPER_1IN54_B
             bool "1.54英寸(黑白红)"
         config EPAPER_1IN54_C
             bool "1.54英寸(黑白黄)"
 
         config EPAPER_2IN13
             bool "2.13英寸(黑白)"
-        config EPAAPER_2IN13_B
+        config EPAPER_2IN13_B
             bool "2.13英寸(黑白红)"
         config EPAPER_2IN13_C
             bool "2.13英寸(黑白黄)"
 
         config EPAPER_2IN7
             bool "2.7英寸(黑白)"
-        config EPAAPER_2IN7_B
+        config EPAPER_2IN7_B
             bool "2.7英寸(黑白红)"
         config EPAPER_2IN7_C
             bool "2.7英寸(黑白黄)"
 
         config EPAPER_2IN9
             bool "2.9英寸(黑白)"
-        config EPAAPER_2IN9_B
+        config EPAPER_2IN9_B
             bool "2.94英寸(黑白红)"
         config EPAPER_2IN9_C
             bool "2.9英寸(黑白黄)"
         
         config EPAPER_4IN2
             bool "4.2英寸(黑白)"
-        config EPAAPER_4IN2_B
+        config EPAPER_4IN2_B
             bool "4.2英寸(黑白红)"
         config EPAPER_4IN2_C
             bool "4.2英寸(黑白黄)"
 
         config EPAPER_5IN83
             bool "5.83英寸(黑白)"
-        config EPAAPER_5IN83_B
+        config EPAPER_5IN83_B
             bool "5.83英寸(黑白红)"
         config EPAPER_5IN83_C
             bool "5.83英寸(黑白黄)"
 
         config EPAPER_6IN0
             bool "6英寸(黑白)"
-        config EPAAPER_6IN0_HD
+        config EPAPER_6IN0_HD
             bool "6英寸(高清)"
         config EPAPER_6IN0_HD_TOUCH
             bool "6英寸(高清+触摸)"
         
         config EPAPER_7IN5
             bool "7.5英寸(黑白)"
-        config EPAAPER_7IN5_B
+        config EPAPER_7IN5_B
             bool "7.5英寸(黑白红)"
         config EPAPER_7IN5_C
             bool "7.5英寸(黑白黄)"
 
         config EPAPER_7IN8
             bool "7.8英寸"
-        config EPAAPER_9IN7
+        config EPAPER_9IN7
             bool "9.7英寸"
         config EPAPER_10IN3_D
             bool "10.3英寸"
