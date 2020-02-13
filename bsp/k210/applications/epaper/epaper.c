@@ -27,10 +27,12 @@ static void epaper_reset(struct  epaper_config *epaper_io)
     rt_thread_delay(20);
 }
 
-static void epaper_send_command()
+static void epaper_send_command(struct  epaper_config *epaper_io)
 {
+    gpiohs_set_pin(epaper_io->dc_pin,GPIO_PV_LOW);
     
 }
+
 int rt_hw_epaper_init(void)
 {
     rt_err_t ret = RT_EOK;
