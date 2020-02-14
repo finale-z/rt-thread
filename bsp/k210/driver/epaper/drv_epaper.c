@@ -24,6 +24,12 @@ typedef struct epaper_device
     rt_uint8_t height;
 } * epaper_device_t;
 
+typedef struct epaper_image
+{
+    rt_uint8_t *black_image;
+    rt_uint8_t *other_image;    // Red or yellow image
+}*epaper_image_t;
+
 static void drv_epaper_cmd(epaper_device_t epaper, rt_uint8_t cmd)
 {
     gpiohs_set_pin(epaper->dc_io, GPIO_PV_LOW);
@@ -79,6 +85,7 @@ static void drv_epaper_read_busy(epaper_device_t epaper_io)
     }
 }
 
+#if (defined EPAPER_1IN54)
 static void drv_epaper_display_turn_on(epaper_device_t epaper_dev)
 {
     drv_epaper_cmd(epaper_dev,0x22);
@@ -94,7 +101,27 @@ static void drv_epaper_display_part_turn_on(epaper_device_t epaper_dev)
     drv_epaper_cmd(epaper_dev,0x20);
     drv_epaper_read_busy(epaper_dev);   
 }
+#endif
 
+#ifdef EPAPER_1IN54_B
+    static void drv_epaper_set_lut_bw(epaper_device_t epaper_dev)
+    {
+        drv_epaper_cmd(epaper_dev,0x20);
+        drv_epaper_data_byte(epaper_dev,epd_1in54b_lut_vcom0,15);
+        drv_epaper_data_byte(epaper_dev,epd_1in54b_lut_w,15);
+        drv_epaper_data_byte(epaper_dev,epd_1in54b_lut_b,15);
+        drv_epaper_data_byte(epaper_dev,epd_1in54b_lut_g1,15);
+        drv_epaper_data_byte(epaper_dev,epd_1in54b_lut_g2,15);
+    }
+
+    static void drv_epaper_set_lut_red(epaper_device_t epaper_dev)
+    {
+        drv_epaper_cmd(epaper_dev,0x25);
+        drv_epaper_data_byte(epaper_dev,epd_1in54b_lut_vcom1,15);
+        drv_epaper_data_byte(epaper_dev,epd_1in54b_lut_red0,15);
+        drv_epaper_data_byte(epaper_dev,epd_1in54b_lut_red1,15);
+    }
+#endif
 
 static rt_err_t drv_epaper_init(rt_device_t dev)
 {
@@ -102,7 +129,7 @@ static rt_err_t drv_epaper_init(rt_device_t dev)
     epaper_device_t epaper_dev = (epaper_device_t)dev;
     drv_epaper_reset(epaper_dev);
 
-#ifdef EPAPER_1IN54
+#ifdef EPAPER_1IN54_V2
     drv_epaper_read_busy(epaper_dev);
     drv_epaper_cmd(epaper_dev,0x12);      //SWRESET
     drv_epaper_read_busy(epaper_dev);
@@ -142,29 +169,156 @@ static rt_err_t drv_epaper_init(rt_device_t dev)
     drv_epaper_data_byte(epaper_dev,0x00,1);
     drv_epaper_read_busy(epaper_dev);
 #endif
+
+#ifdef EPAPER_1IN54_B
+    drv_epaper_cmd(epaper_dev,0x01);        // POWER_SETTING
+    drv_epaper_data_byte(epaper_dev,0x07,1);
+    drv_epaper_data_byte(epaper_dev,0x00,1);
+    drv_epaper_data_byte(epaper_dev,0x08,1);
+    drv_epaper_data_byte(epaper_dev,0x00,1);
+    drv_epaper_cmd(epaper_dev,0x06);        // BOOSTER_SOFT_START
+    drv_epaper_data_byte(epaper_dev,0x07,1);
+    drv_epaper_data_byte(epaper_dev,0x07,1);
+    drv_epaper_data_byte(epaper_dev,0x07,1);
+    drv_epaper_cmd(epaper_dev,0x04);        // POWER_ON
+
+    drv_epaper_read_busy(epaper_dev);
+
+    drv_epaper_cmd(epaper_dev,0X00);        // PANEL_SETTING
+    drv_epaper_data_byte(epaper_dev,0xcf,1);
+    drv_epaper_cmd(epaper_dev,0X50);        // VCOM_AND_DATA_INTERVAL_SETTING
+    drv_epaper_data_byte(epaper_dev,0x37,1);// 0xF0
+    drv_epaper_cmd(epaper_dev,0x30);        // PLL_CONTROL
+    drv_epaper_data_byte(epaper_dev,0x39,1);
+    drv_epaper_cmd(epaper_dev,0x61);        // TCON_RESOLUTION set x and y
+    drv_epaper_data_byte(epaper_dev,0xC8,1);        // 200
+    drv_epaper_data_byte(epaper_dev,0x00,1);        // y High eight: 0
+    drv_epaper_data_byte(epaper_dev,0xC8,1);        // y Low eight: 200
+    drv_epaper_cmd(epaper_dev,0x82);        // VCM_DC_SETTING_REGISTER
+    drv_epaper_data_byte(epaper_dev,0x0E,1);
+
+    drv_epaper_set_lut_bw(epaper_dev);;
+    drv_epaper_set_lut_red(epaper_dev);
+#endif
+
+#ifdef EPAPER_1IN54_C
+    drv_epaper_cmd(0x06);       //boost soft start
+    drv_epaper_data_byte(epaper_dev,0x17,1);
+    drv_epaper_data_byte(epaper_dev,0x17,1);
+    drv_epaper_data_byte(epaper_dev,0x17,1);
+    drv_epaper_cmd(0x04);
+
+    drv_epaper_read_busy(epaper_dev);
+
+    drv_epaper_cmd(0x00);       //panel setting
+    drv_epaper_data_byte(epaper_dev,0x0f,1);        //LUT from OTP£¬160x296
+    drv_epaper_data_byte(epaper_dev,0x0d,1);        //VCOM to 0V fast
+
+    drv_epaper_cmd(0x61);       //resolution setting
+    drv_epaper_data_byte(epaper_dev,0x98,1);        //152
+    drv_epaper_data_byte(epaper_dev,0x00,1);         //152
+    drv_epaper_data_byte(epaper_dev,0x98,1);
+
+    drv_epaper_cmd(0X50);       //VCOM AND DATA INTERVAL SETTING
+    drv_epaper_data_byte(epaper_dev,0x77,1);         //WBmode:VBDF 17|D7 VBDW 97 VBDB 57		WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
+
+#endif
 }
 
 static rt_err_t drv_epaper_clear(epaper_device_t epaper_dev)
 {
     rt_uint8_t *buff = (rt_uint8_t *)rt_malloc((epaper_dev->width) * (epaper_dev->height) * sizeof(rt_uint8_t));
+    rt_uint8_t cmd[3];
+    rt_memset(buff,0xFF,(epaper_dev->width) * (epaper_dev->height) * sizeof(rt_uint8_t));
+
     if(buff == RT_NULL)
     {
         LOG_E("Failed to request cache");
         return RT_ERROR;
     }
-    rt_memset(buff,0xFF,(epaper_dev->width) * (epaper_dev->height) * sizeof(rt_uint8_t));
-    drv_epaper_cmd(epaper_dev,0x24);
+#ifdef EPAPER_1IN54_V2
+    cmd[0] = 0x24;
+#endif
+#if (defined EPAPER_1IN54_B) || (defined EPAPER_1IN54_C)
+    cmd[0] = 0x10;
+    cmd[1] = 0x13;
+    cmd[2] = 0x12;
+#endif
+
+    drv_epaper_cmd(epaper_dev,cmd[0]);
     drv_epaper_data_byte(epaper_dev,buff,(epaper_dev->width) * (epaper_dev->height));
+#ifdef EPAPER_1IN54_B
+    drv_epaper_data_byte(epaper_dev,buff,(epaper_dev->width) * (epaper_dev->height));
+#endif
+#if (defined EPAPER_1IN54_B) || (defined EPAPER_1IN54_C)
+    drv_epaper_cmd(epaper_dev,cmd[1]);
+    drv_epaper_data_byte(epaper_dev,buff,(epaper_dev->width) * (epaper_dev->height));
+    rt_thread_mdelay(2);
+    drv_epaper_cmd(epaper_dev,cmd[2]);
+    drv_epaper_read_busy(epaper_dev);
+#endif
+#ifdef EPAPER_1IN54_V2
     drv_epaper_display_turn_on(epaper_dev);
+#endif
 }
 
-static void drv_epaper_display_image(epaper_device_t epaper_dev,rt_uint8_t *image)
+static void drv_epaper_display_image(epaper_device_t epaper_dev,void *image)
 {
+#if (defined EPAPER_1IN54)
     drv_epaper_cmd(epaper_dev,0x24);
-    drv_epaper_data_byte(epaper_dev,image,(epaper_dev->width)*(epaper_dev->height));
+    drv_epaper_data_byte(epaper_dev,(rt_uint8_t*)image,(epaper_dev->width)*(epaper_dev->height));
     drv_epaper_display_turn_on(epaper_dev);
+#endif
+
+#if (defined EPAPER_1IN54_B) || (defined EPAPER_1IN54_C)
+    epaper_image_t image_buff = (epaper_image_t*)image;
+    drv_epaper_cmd(epaper_dev,0x10);
+    #if (defined EPAPER_1IN54_B)
+        drv_epaper_data_byte(epaper_dev,image_buff->black_image,(epaper_dev->width)*(epaper_dev->height)*2);
+        rt_thread_mdelay(2);
+    #endif
+    #if (defined EPAPER_1IN54_C)
+        drv_epaper_data_byte(epaper_dev,image_buff->black_image,(epaper_dev->width)*(epaper_dev->height));
+    #endif
+    drv_epaper_cmd(epaper_dev,0x13);
+    drv_epaper_data_byte(epaper_dev,image_buff->other_image,(epaper_dev->width)*(epaper_dev->height));
+    rt_thread_mdelay(2);
+    drv_epaper_cmd(epaper_dev,0x12);
+    drv_epaper_read_busy(epaper_dev);
+#endif
 }
 
+static void drv_epaper_sleep(epaper_device_t epaper_dev)
+{
+#ifdef EPAPER_1IN54
+    drv_epaper_cmd(0x10);       //enter deep sleep
+    drv_epaper_data_byte(epaper_dev,0x01,1);
+    rt_thread_mdelay(100);
+#endif
+
+#ifdef EPAPER_1IN54_B
+    drv_epaper_cmd(epaper_dev,0x50);        // VCOM_AND_DATA_INTERVAL_SETTING
+    drv_epaper_data_byte(epaper_dev,0x17,1);
+    drv_epaper_cmd(epaper_dev,0x82);        // VCM_DC_SETTING_REGISTER
+    drv_epaper_data_byte(epaper_dev,0x00,1);
+    drv_epaper_cmd(epaper_dev,0x01);        // POWER_SETTING
+    drv_epaper_data_byte(epaper_dev,0x02,1);
+    drv_epaper_data_byte(epaper_dev,0x00,1);
+    drv_epaper_data_byte(epaper_dev,0x00,1);
+    drv_epaper_data_byte(epaper_dev,0x00,1);
+    drv_epaper_read_busy(epaper_dev);
+    rt_thread_mdelay(1000);
+    drv_epaper_cmd(epaper_dev,0x02);        // POWER_OFF
+#endif
+
+#ifdef EPAPER_1IN54_C
+    drv_epaper_cmd(epaper_dev,0X02);    	//power off
+    drv_epaper_read_busy(epaper_dev);
+    drv_epaper_cmd(epaper_dev,0X07);    	//deep sleep
+    drv_epaper_data_byte(epaper_dev,0xA5,1);
+#endif
+}
+#if (defined EPAPER_1IN54)
 static void drv_epaper_display_part_base_image(epaper_device_t epaper_dev,rt_uint8_t * image)
 {
     drv_epaper_cmd(epaper_dev,0x24);
@@ -181,6 +335,7 @@ static void drv_epaper_display_part_image(epaper_device_t epaper_dev,rt_uint8_t 
     drv_epaper_data_byte(epaper_dev,image,(epaper_dev->width)*(epaper_dev->height));
     drv_epaper_display_part_turn_on(epaper_dev);
 }
+#endif
 
 static rt_err_t drv_epaper_open(rt_device_t dev, rt_uint16_t oflag)
 {
@@ -230,29 +385,25 @@ static rt_err_t drv_epaper_control(rt_device_t dev, int cmd, void *args)
         break;
 
     case EPAPER_DISPLAY_IMAGE:
-        drv_epaper_display_image(epaper,(rt_uint8_t *)args);
+        drv_epaper_display_image(epaper,args);
         break;
 
-    case RTGRAPHIC_CTRL_POWEROFF:
-        /* Todo: power off */
-        ret = -RT_ENOSYS;
+    case EPAPER_SLEEP:
+        drv_epaper_sleep(epaper);
         break;
 
-    case RTGRAPHIC_CTRL_GET_INFO:
-        *(struct rt_device_graphic_info *)args = epaper->epaper_info;
+#ifdef EPAPER_1IN54
+    case EPAPER_DISPLAY_PART_BASE_IMAGE:
+        drv_epaper_display_part_base_image(epaper,(rt_uint8_t*)args);
         break;
-
-    case RTGRAPHIC_CTRL_SET_MODE:
-        ret = -RT_ENOSYS;
+    case EPAPER_DISPLAY_PART_IMAGE:
+        drv_epaper_display_part_image(epaper,(rt_uint8_t*)args);
         break;
-    case RTGRAPHIC_CTRL_GET_EXT:
-        ret = -RT_ENOSYS;
-        break;
+#endif
     default:
         LOG_E("drv_lcd_control cmd: %d", cmd);
         break;
     }
-
     return ret;
 }
 

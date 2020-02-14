@@ -7,8 +7,8 @@ menuconfig USING_EPAPER
 if USING_EPAPER
     choice 
         prompt "墨水屏型号"
-        config EPAPER_1IN54
-            bool "1.54英寸(黑白)"
+        config EPAPER_1IN54_V2
+            bool "1.54英寸(黑白 V2)"
         config EPAPER_1IN54_B
             bool "1.54英寸(黑白红)"
         config EPAPER_1IN54_C

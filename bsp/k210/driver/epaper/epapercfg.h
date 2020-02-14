@@ -1,7 +1,7 @@
 #ifndef _EPAPERCFG_H__
 #define _EPAPERCFG_H__
 
-#if (!defined EPAPER_1IN54) || (defined EPAPER_1IN54_B) || (defined EPAPER_1IN54_C)
+#if (!defined EPAPER_1IN54_V2) || (defined EPAPER_1IN54_B) || (defined EPAPER_1IN54_C)
 #define EPAPER_X_MAX 200
 #define EPAPER_Y_MAX 200
 #endif
@@ -73,7 +73,17 @@ const unsigned char epd_1in54b_lut_red1[] = {0x03, 0x1D, 0x01, 0x01, 0x08, 0x23,
 #endif
 
 
-#define EPAPER_CLEAR    0
-#define EPAPER_DISPLAY_IMAGE    1
 
+
+enum EPAPER_CONFIG
+{
+    EPAPER_CLEAR = 0,
+    EPAPER_DISPLAY_IMAGE,
+    EPAPER_SLEEP,
+#ifdef EPAPER_1IN54
+    EPAPER_DISPLAY_PART_BASE_IMAGE,
+    EPAPER_DISPLAY_PART_IMAGE,
+#endif
+    EPAPER_CONFIG_END
+};
 #endif
