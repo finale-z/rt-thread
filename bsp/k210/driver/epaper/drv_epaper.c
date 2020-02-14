@@ -24,12 +24,6 @@ typedef struct epaper_device
     rt_uint8_t height;
 } * epaper_device_t;
 
-typedef struct epaper_image
-{
-    rt_uint8_t *black_image;
-    rt_uint8_t *other_image;    // Red or yellow image
-}*epaper_image_t;
-
 static void drv_epaper_cmd(epaper_device_t epaper, rt_uint8_t cmd)
 {
     gpiohs_set_pin(epaper->dc_io, GPIO_PV_LOW);
@@ -223,6 +217,7 @@ static rt_err_t drv_epaper_init(rt_device_t dev)
     drv_epaper_data_byte(epaper_dev,0x77,1);         //WBmode:VBDF 17|D7 VBDW 97 VBDB 57		WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
 
 #endif
+    return ret;
 }
 
 static rt_err_t drv_epaper_clear(epaper_device_t epaper_dev)
@@ -462,7 +457,7 @@ int rt_hw_epaper_init(void)
 #endif
     epaper_dev->parent.user_data = RT_NULL;
 
-    ret = rt_device_register(&epaper_dev->parent, "epaper", RT_DEVICE_FLAG_RDWR);
+    ret = rt_device_register(&epaper_dev->parent, "epaper", RT_DEVICE_FLAG_STANDALONE);
     return ret;
 }
 

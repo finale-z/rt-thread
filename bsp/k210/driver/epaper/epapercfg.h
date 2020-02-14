@@ -72,18 +72,4 @@ const unsigned char epd_1in54b_lut_red0[] = {0x83, 0x5D, 0x01, 0x81, 0x48, 0x23,
 const unsigned char epd_1in54b_lut_red1[] = {0x03, 0x1D, 0x01, 0x01, 0x08, 0x23, 0x37, 0x37, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 #endif
 
-
-
-
-enum EPAPER_CONFIG
-{
-    EPAPER_CLEAR = 0,
-    EPAPER_DISPLAY_IMAGE,
-    EPAPER_SLEEP,
-#ifdef EPAPER_1IN54
-    EPAPER_DISPLAY_PART_BASE_IMAGE,
-    EPAPER_DISPLAY_PART_IMAGE,
-#endif
-    EPAPER_CONFIG_END
-};
 #endif
