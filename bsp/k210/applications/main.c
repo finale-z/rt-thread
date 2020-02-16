@@ -10,11 +10,9 @@
 
 #include <rtthread.h>
 #include <stdio.h>
-#include "drv_epaper.h"
 
 int main(void)
 {
-    
     rt_kprintf("Hello, world\n");
 
     return 0;

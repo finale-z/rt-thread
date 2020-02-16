@@ -63,7 +63,7 @@ menuconfig device path：
            arg  控制的参数
 -----------------------------------------------------------------------
 
-其中与墨水屏相关的命令控制字在[epapercfg.h](epapercfg.h)中：
+其中与墨水屏相关的命令控制字在[drv_epaper.h](drv_epaper.h)中：
 
 |命令控制字|作用|
 | ------ | -----|
@@ -80,11 +80,14 @@ menuconfig device path：
 ```
 #include <drv_epaper.h>
 
+rt_device_t epaper_dev;
 epaper_image_t my_image;
+
+epaper_dev = rt_device_find("epaper);
 my_image->black_image = (rt_uint8_t*)my_image_black;
 my_image->other_image = (rt_uint8_t*)my_image_other;
 
-rt_device_control("epaper",EPAPER_DISPLAY_IMAGE,my_image);
+rt_device_control(epaper_dev,EPAPER_DISPLAY_IMAGE,my_image);
 ```
 
 
