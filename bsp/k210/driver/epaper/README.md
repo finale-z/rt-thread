@@ -83,7 +83,7 @@ menuconfig device path：
 rt_device_t epaper_dev;
 epaper_image_t my_image;
 
-epaper_dev = rt_device_find("epaper);
+epaper_dev = rt_device_find("epaper");
 my_image->black_image = (rt_uint8_t*)my_image_black;
 my_image->other_image = (rt_uint8_t*)my_image_other;
 rt_device_init(epaper_dev);
