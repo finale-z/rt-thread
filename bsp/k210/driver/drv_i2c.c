@@ -79,14 +79,13 @@ int rt_hw_i2c_init(void)
     i2c_init(i2c_bus.i2c_instance,i2c_bus.slave_addr,i2c_bus.addr_width,i2c_bus.clk_freq);
     ret = rt_i2c_bus_device_register(&i2c_bus.parent,"i2c0");
 
-#endif
-    
-#ifdef BSP_USING_I2C1
     if(ret != RT_EOK)
     {
         return ret;
     }
-
+#endif
+    
+#ifdef BSP_USING_I2C1
     i2c_bus.i2c_instance = I2C_DEVICE_1;
     i2c_bus.slave_addr = I2C1_SLAVE_ADDR;
     i2c_bus.addr_width = I2C1_ADDR_WIDTH;

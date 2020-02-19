@@ -206,24 +206,24 @@ static rt_err_t drv_epaper_init(rt_device_t dev)
 #endif
 
 #ifdef EPAPER_1IN54_C
-    drv_epaper_cmd(0x06);       //boost soft start
+    drv_epaper_cmd(epaper_dev,0x06);       //boost soft start
     drv_epaper_data_byte(epaper_dev,0x17,1);
     drv_epaper_data_byte(epaper_dev,0x17,1);
     drv_epaper_data_byte(epaper_dev,0x17,1);
-    drv_epaper_cmd(0x04);
+    drv_epaper_cmd(epaper_dev,0x04);
 
     drv_epaper_read_busy(epaper_dev);
 
-    drv_epaper_cmd(0x00);       //panel setting
+    drv_epaper_cmd(epaper_dev,0x00);       //panel setting
     drv_epaper_data_byte(epaper_dev,0x0f,1);        //LUT from OTP£¬160x296
     drv_epaper_data_byte(epaper_dev,0x0d,1);        //VCOM to 0V fast
 
-    drv_epaper_cmd(0x61);       //resolution setting
+    drv_epaper_cmd(epaper_dev,0x61);       //resolution setting
     drv_epaper_data_byte(epaper_dev,0x98,1);        //152
     drv_epaper_data_byte(epaper_dev,0x00,1);         //152
     drv_epaper_data_byte(epaper_dev,0x98,1);
 
-    drv_epaper_cmd(0X50);       //VCOM AND DATA INTERVAL SETTING
+    drv_epaper_cmd(epaper_dev,0X50);       //VCOM AND DATA INTERVAL SETTING
     drv_epaper_data_byte(epaper_dev,0x77,1);         //WBmode:VBDF 17|D7 VBDW 97 VBDB 57		WBRmode:VBDF F7 VBDW 77 VBDB 37  VBDR B7
 
 #endif
