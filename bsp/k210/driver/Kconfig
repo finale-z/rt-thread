@@ -2,6 +2,7 @@ menu "WaveShare"
 
 menuconfig USING_EPAPER
     bool    "Using Epaper"
+    select BSP_USING_SPI1
     default n
 
 if USING_EPAPER
@@ -89,6 +90,10 @@ if USING_EPAPER
             select BSP_SPI1_USING_SS3
     endchoice
 
+    menuconfig EPAPER_CS_PIN
+        int "The CS pin"
+    default 10
+    
     menuconfig EPAPER_DC_PIN
         int "The DC pin"
     default 11
@@ -109,7 +114,6 @@ if USING_EPAPER
     menuconfig EPAPER_BUSY_GPIO
         int "the BUSY GPIO"
         default 3
-
 endif
 endmenu
 

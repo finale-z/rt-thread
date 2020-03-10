@@ -185,67 +185,24 @@
 
 /* multimedia packages */
 
-#define PKG_USING_MUPDF
-#define PKG_USING_MUPDF_V120
 
 /* tools packages */
 
 
 /* system packages */
 
-#define PKG_USING_GUIENGINE
-#define PKG_USING_GUIENGINE_LATEST_VERSION
-#define PKG_USING_RGB888_PIXEL_BITS_32
-#define PKG_USING_RGB888_PIXEL_BITS 32
-#define GUIENGINE_CMD_STRING_MAX 16
-#define GUIENGINE_USING_FONT16
-#define GUIENGINE_USING_FONT12
-#define GUIENGINE_USING_PNG
-#define GUIENGINE_IMAGE_LODEPNG
-#define GUIENGINE_IMAGE_CONTAINER
-#define GUIENGINE_NAME_MAX 16
 
 /* peripheral libraries and drivers */
 
-#define PKG_USING_SENSORS_DRIVERS
-#define PKG_USING_BME280
-#define PKG_USING_BME280_LATEST_VERSION
-#define PKG_USING_BMI160_BMX160
-#define PKG_USING_BMI160_BMX160_LATEST_VERSION
 #define PKG_USING_KENDRYTE_SDK
 #define PKG_USING_KENDRYTE_SDK_V055
 #define PKG_KENDRYTE_SDK_VERNUM 0x0055
-#define PKG_USING_ROSSERIAL
-#define ROSSERIAL_USE_SERIAL
-#define ROSSERIAL_UART_NAME "uart2"
-
-/* roserial examples */
-
-
-/* You may only choose one example at a time */
-
-#define PKG_USING_ROSSERIAL_MLATEST_VERSION
-#define PKG_ROSSERIAL_VER_NUM 0x29999
-#define PKG_USING_I2C_TOOLS
-#define PKG_USING_I2C_TOOLS_LATEST_VERSION
 
 /* miscellaneous packages */
 
 
 /* samples: kernel and components samples */
 
-#define PKG_USING_ULAPACK
-#define ULAPACK_USE_DYNAMIC_ALLOC
-#define PKG_USING_ULAPACK_LATEST_VERSION
-#define PKG_ULAPACK_VER_NUM 0x99999
-#define PKG_USING_UKAL
-#define UKAL_MAX_STATE_VECTOR_SIZE 5
-#define UKAL_MAX_MEASUREMENT_VECTOR_SIZE 5
-
-/* Dymamic memory allocation selected from ulapack */
-
-#define PKG_USING_UKAL_LATEST_VERSION
-#define PKG_UKAL_VER_NUM 0x99999
 #define BOARD_K210_EVB
 
 /* WaveShare */
@@ -253,6 +210,7 @@
 #define USING_EPAPER
 #define EPAPER_1IN54_C
 #define EPAPER_USE_SS0
+#define EPAPER_CS_PIN 18
 #define EPAPER_DC_PIN 19
 #define EPAPER_DC_GPIO 1
 #define EPAPER_RST_PIN 33
@@ -267,7 +225,14 @@
 #define I2C0_SLAVE_ADDR 0x00
 #define I2C0_ADDR_WIDTH 7
 #define I2C0_CLK_FREQ 200000
+#define BSP_USING_SPI1
+#define BSP_SPI1_CLK_PIN 34
+#define BSP_SPI1_D0_PIN 13
+#define BSP_SPI1_D1_PIN 17
 #define BSP_SPI1_USING_SS0
+#define BSP_SPI1_SS0_PIN 32
+#define BSP_SPI1_USING_SS1
+#define BSP_SPI1_SS1_PIN 25
 #define __STACKSIZE__ 4096
 
 #endif

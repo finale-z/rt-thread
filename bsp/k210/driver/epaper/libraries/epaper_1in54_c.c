@@ -5,12 +5,8 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2019-02-13     ZLW          first version
+ * 2019-03-05     ZLW          first version
  */
 
-#ifndef DRV_EPAPER_H__
-#define DRV_EPAPER_H__
+#include "drv_epaper.h"
 
-int epaper_init(void);
-
-#endif
