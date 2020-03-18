@@ -10,11 +10,10 @@
 
 #include <rthw.h>
 #include <rtthread.h>
-#include <rtdevice.h>
 
 #ifdef USING_EPAPER
 #include "drv_epaper.h"
-#include "epaper.h"
+
 #include <drv_io_config.h>
 #include <spi.h>
 #include <dmac.h>
@@ -22,25 +21,54 @@
 #include <gpiohs.h>
 #include <string.h>
 
-static struct rt_spi_device *spi_dev;
 static struct epaper_device _epaper_dev;
 
 static rt_err_t _epaper_init(struct epapet_intf *intf)
 {
     rt_uint8_t ret;
-    spi_dev = (struct rt_spi_device *)rt_device_find(intf->dev_name);
-    if (spi_dev == RT_NULL)
+    _epaper_dev.epaper_spi  = (struct rt_spi_device *)rt_device_find(intf->dev_name);
+    if (_epaper_dev.epaper_spi  == RT_NULL)
     {
-        LOG_E("can not find device %s", intf->dev_name);
+        rt_kprintf("can not find device %s", intf->dev_name);
         return -RT_ERROR;
     }
+
+    _epaper_dev.epaper_spi->config.mode = RT_SPI_MASTER | RT_SPI_MODE_1 | RT_SPI_MSB;
+    _epaper_dev.epaper_spi->config.data_width = 8;
+    _epaper_dev.epaper_spi->config.max_hz = 20 * 1000 *1000; ;
+    rt_spi_configure(_epaper_dev.epaper_spi,&(_epaper_dev.epaper_spi->config));;
+
     ret = epaper_init(&_epaper_dev);
     return ret;
 }
 
-int rt_hw_epaper_init(const char *name, struct epaper_config *cfg)
+static rt_err_t epaper_open(rt_device_t dev, rt_uint16_t oflag)
 {
-    if (_epaper_init(&cfg->intf) != RT_EOK)
+    return RT_EOK;
+}
+
+static rt_err_t epaper_close(rt_device_t dev)
+{
+    return RT_EOK;
+}
+
+
+static void epaper_reset(struct epaper_device dev)
+{
+    rt_pin_write(dev.epaper_gpio.rst_io,PIN_HIGH);
+    rt_delayms(10);
+    rt_pin_write(dev.epaper_gpio.rst_io,PIN_LOW);
+    rt_delayms(10);
+    rt_pin_write(dev.epaper_gpio.rst_io,PIN_HIGH);
+}
+
+int rt_hw_epaper_init(const char *name, struct rt_device_t *dev)
+{
+    struct epaper_device *epaper = (struct epaper_device*)dev;
+    _epaper_dev.epaper_gpio.busy_io = EPAPER_BUSY_GPIO;
+    _epaper_dev.epaper_gpio.dc_io = EPAPER_DC_GPIO;
+    _epaper_dev.epaper_gpio.rst_io = EPAPER_RST_GPIO;
+    if (_epaper_init(&epaper->intf) != RT_EOK)
     {
         return RT_ERROR;
     }

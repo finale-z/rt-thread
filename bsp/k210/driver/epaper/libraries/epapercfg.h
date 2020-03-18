@@ -82,16 +82,28 @@ const unsigned char epd_1in54b_lut_red0[] = {0x83, 0x5D, 0x01, 0x81, 0x48, 0x23,
 const unsigned char epd_1in54b_lut_red1[] = {0x03, 0x1D, 0x01, 0x01, 0x08, 0x23, 0x37, 0x37, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 #endif
 
+#include <rtdevice.h>
+
 struct epapet_intf
 {
     char                       *dev_name;   /* The name of the communication device */
-    rt_uint8_t                  type;       /* Communication interface type */
+    uint8_t                  type;       /* Communication interface type */
     void                       *user_data;  /* Private data for the sensor. ex. i2c addr,spi cs,control I/O */
 };
 
-struct epaper_config
+struct  epaper_pin
 {
-    struct epapet_intf      intf;
+    uint8_t                 busy_io;
+    uint8_t                 rst_io;
+    uint8_t                 dc_io;
+};
+
+struct epaper_device
+{
+    rt_device_t                     epaper_dev;   
+    struct epapet_intf         intf;
+    struct rt_spi_device       *epaper_spi;
+    struct  epaper_pin         epaper_gpio;
 };
 
 #endif

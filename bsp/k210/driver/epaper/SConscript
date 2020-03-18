@@ -2,7 +2,10 @@ from building import *
 
 cwd     = GetCurrentDir()
 src     = Glob('*.c') + Glob('*.cpp')
-CPPPATH = [cwd]
+CPPPATH = [cwd,cwd + '/libraries']
+
+if GetDepend('EPAPER_1IN54_C'):
+    src += ['libraries/epaper_1in54_c.c']
 
 group = DefineGroup('epaper', src, depend = ['USING_EPAPER'], CPPPATH = CPPPATH)
 

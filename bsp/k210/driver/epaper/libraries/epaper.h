@@ -13,15 +13,10 @@
 
 /********************************************************/
 /* header includes */
-#ifdef __KERNEL__
-#include <linux/types.h>
-#include <linux/kernel.h>
-#else
 #include <stdint.h>
 #include <stddef.h>
-#endif
 #include "epapercfg.h"
 
-int8_t epaper_init();
+int8_t epaper_init(struct epaper_device *epaper_dev);
 
 #endif

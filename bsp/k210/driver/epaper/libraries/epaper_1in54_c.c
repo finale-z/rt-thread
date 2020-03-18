@@ -8,5 +8,9 @@
  * 2019-03-05     ZLW          first version
  */
 
-#include "drv_epaper.h"
+#include "epaper.h"
 
+int8_t epaper_init(struct epaper_device *epaper_dev)
+{
+
+}

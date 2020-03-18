@@ -11,6 +11,6 @@
 #ifndef DRV_EPAPER_H__
 #define DRV_EPAPER_H__
 
-int epaper_init(void);
+#include "epaper.h"
 
 #endif
