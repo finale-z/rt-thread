@@ -22,7 +22,7 @@ from xml.etree.ElementTree import SubElement
 
 from building import *
 
-MODULE_VER_NUM = 1
+MODULE_VER_NUM = 3
 
 source_pattern = ['*.c', '*.cpp', '*.cxx', '*.s', '*.S', '*.asm']
 
@@ -109,12 +109,12 @@ def ExcludeFiles(infiles, files):
 def ExcludePaths(rootpath, paths):
     ret = []
 
-    files = os.listdir(rootpath)
+    files = os.listdir(OSPath(rootpath))
     for file in files:
         if file.startswith('.'):
             continue
 
-        fullname = os.path.join(rootpath, file)
+        fullname = os.path.join(OSPath(rootpath), file)
 
         if os.path.isdir(fullname):
             # print(fullname)
@@ -228,7 +228,7 @@ def HandleToolOption(tools, env, project, reset):
         with open('rtconfig_preinc.h', mode = 'w+') as f:
             f.write(file_header)
             for cppdef in CPPDEFINES:
-                f.write("#define " + cppdef + '\n')
+                f.write("#define " + cppdef.replace('=', ' ') + '\n')
             f.write(file_tail)
         #  change the c.compiler.include.files
         files = option.findall('listOptionValue')
